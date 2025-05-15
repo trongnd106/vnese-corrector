@@ -1,0 +1,8 @@
+Framework: Ulfius, Flask
+Database: SQLite
+
+Compile: gcc server.c -o server -lulfius -ljansson -lorcania -lsqlite3
+Run: ./server
+
+Compile 2: gcc index.c -o index -lulfius -ljansson -lorcania
+Run: ./index
