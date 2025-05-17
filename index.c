@@ -1,9 +1,21 @@
 #include <ulfius.h>
 #include <stdio.h>
+// #include <mysql/mysql.h>
+// #include <sqlite3.h>
+// #include "model/user_model.h"
 
 #define PORT 8080
 
-// GET "/hello"
+// Connect DB
+// #define DB_HOST "localhost"
+// #define DB_USER "root"
+// #define DB_PASS "root"
+// #define DB_NAME "corrector"
+// #define DB_PORT 3306
+
+// MYSQL *conn;
+
+// Handle request GET "/hello"
 int callback_hello(const struct _u_request *request, struct _u_response *response, void *user_data) {
     json_t *json_body = json_object();
     json_object_set_new(json_body, "message", json_string("Hello from Ulfius!"));
@@ -59,37 +71,56 @@ int callback_delete_hello(const struct _u_request *request, struct _u_response *
     return U_OK;
 }
 
-// GET "/view"
-int callback_view(const struct _u_request *request, struct _u_response *response, void *user_data) {
-    const char *file_path = "./vendors/views/index.html";
-    FILE *file = fopen(file_path, "r");
-    if (file == NULL) {
-        ulfius_set_string_body_response(response, 500, "Error: Unable to load HTML file.");
-        return U_ERROR;
-    }
+// int callback_post_user(const struct _u_request *req, struct _u_response *res, void *db_ptr) {
+//     json_error_t error;
+//     const json_t *json_req = ulfius_get_json_body_request(req, &error);
+//     const char *name = json_string_value(json_object_get(json_req, "name"));
 
-    fseek(file, 0, SEEK_END);
-    long file_size = ftell(file);
-    rewind(file);
+//     json_t *body = json_object();
+//     if (!name) {
+//         json_object_set_new(body, "error", json_string("Require field 'name'"));
+//         ulfius_set_json_body_response(res, 400, body);
+//     } else if (create_user((sqlite3 *)db_ptr, name) != 0) {
+//         json_object_set_new(body, "error", json_string("Create user failed"));
+//         ulfius_set_json_body_response(res, 500, body);
+//     } else {
+//         json_object_set_new(body, "message", json_string("OK"));
+//         ulfius_set_json_body_response(res, 200, body);
+//     }
+//     json_decref(body);
+//     return U_OK;
+// }
 
-    char *html_content = malloc(file_size + 1);
-    if (html_content == NULL) {
-        fclose(file);
-        ulfius_set_string_body_response(response, 500, "Error: Memory allocation failed.");
-        return U_ERROR;
-    }
+// int callback_get_users(const struct _u_request *req, struct _u_response *res, void *db_ptr) {
+//     json_t *users = get_all_users((sqlite3 *)db_ptr);
+//     if (!users) {
+//         json_t *error = json_object();
+//         json_object_set_new(error, "error", json_string("Lỗi DB"));
+//         ulfius_set_json_body_response(res, 500, error);
+//         json_decref(error);
+//     } else {
+//         ulfius_set_json_body_response(res, 200, users);
+//         json_decref(users);
+//     }
+//     return U_OK;
+// }
 
-    fread(html_content, 1, file_size, file);
-    html_content[file_size] = '\0';
-    fclose(file);
-
-    ulfius_set_string_body_response(response, 200, html_content);
-    free(html_content);
-    return U_OK;
-}
 
 int main(void) {
     struct _u_instance instance;
+
+    // Connect MySQL
+    // conn = mysql_init(NULL);
+    // if (!mysql_real_connect(conn, DB_HOST, DB_USER, DB_PASS, DB_NAME, DB_PORT, NULL, 0)) {
+    //     fprintf(stderr, "Error MySQL connection: %s\n", mysql_error(conn));
+    //     return 1;
+    // }
+
+    // sqlite3 *db;
+    // if (sqlite3_open("db.sqlite", &db) != SQLITE_OK) {
+    //     fprintf(stderr, "Can't open database: %s\n", sqlite3_errmsg(db));
+    //     return 1;
+    // }
 
     // Initialize Ulfius
     if (ulfius_init_instance(&instance, PORT, NULL, NULL) != U_OK) {
@@ -121,12 +152,6 @@ int main(void) {
         ulfius_clean_instance(&instance);
         return 1;
     }
-    
-    if (ulfius_add_endpoint_by_val(&instance, "GET", "/index", NULL, 0, &callback_view, NULL) != U_OK) {
-        fprintf(stderr, "Error adding GET /view endpoint\n");
-        ulfius_clean_instance(&instance);
-        return 1;
-    }
 
     // Run server
     printf("Starting server on port %d...\n", PORT);
@@ -140,9 +165,10 @@ int main(void) {
         fprintf(stderr, "Possible reasons: Port %d might be in use or requires root privileges\n", PORT);
     }
 
-    // Stop server
+    // Down server
     ulfius_stop_framework(&instance);
     ulfius_clean_instance(&instance);
+    // sqlite3_close(db);
 
     return 0;
 }

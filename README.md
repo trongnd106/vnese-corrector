@@ -2,7 +2,7 @@
 
 ## Run command to compile source
 
-gcc index.c -o server -lulfius -ljansson -lorcania
+gcc server.c -o server -lulfius -ljansson -lorcania
 
 ## Run command to start Server
 
