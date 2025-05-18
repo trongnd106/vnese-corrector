@@ -5,6 +5,8 @@
 #include "dotenv.h"
 #include "services/view.h"
 #include "services/static.h"
+#include <jansson.h>
+#include "services/user.h"
 
 #define PORT 8080
 
@@ -47,6 +49,13 @@ int main(void) {
         fprintf(stderr, "Failed to connect to MySQL. Exiting...\n");
         return 1;
     }
+
+    // For handle static files
+    if (ulfius_add_endpoint_by_val(&instance, "GET", "/statics/*", NULL, 0, &callback_static, NULL) != U_OK) {
+        fprintf(stderr, "Error adding static files endpoint\n");
+        ulfius_clean_instance(&instance);
+        return 1;
+    }
     
     // Define endpoints
     if (ulfius_add_endpoint_by_val(&instance, "GET", "/index", NULL, 0, &callback_view, NULL) != U_OK) {
@@ -54,10 +63,8 @@ int main(void) {
         ulfius_clean_instance(&instance);
         return 1;
     }
-
-    // For handle static files
-    if (ulfius_add_endpoint_by_val(&instance, "GET", "/statics/*", NULL, 0, &callback_static, NULL) != U_OK) {
-        fprintf(stderr, "Error adding static files endpoint\n");
+    if (ulfius_add_endpoint_by_val(&instance, "POST", "/users", NULL, 0, &callback_create_user, conn) != U_OK) {
+        fprintf(stderr, "Error adding POST /users endpoint\n");
         ulfius_clean_instance(&instance);
         return 1;
     }
