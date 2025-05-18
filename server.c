@@ -2,10 +2,10 @@
 #include <stdio.h>
 #include <string.h>
 #include <mysql/mysql.h>
+#include "dotenv.h"
 
 #define PORT 8080
 
-// Function to initialize MySQL connection
 MYSQL* init_mysql_connection() {
     MYSQL *conn = mysql_init(NULL);
     if (conn == NULL) {
@@ -13,8 +13,14 @@ MYSQL* init_mysql_connection() {
         return NULL;
     }
 
-    if (mysql_real_connect(conn, "127.0.0.1", "root", "root", "corrector", 3306, NULL, 0) == NULL) {
-        fprintf(stderr, "mysql_real_connect() failed\n");
+    const char* host = getenv("DB_HOST");
+    const char* user = getenv("DB_USER");
+    const char* pass = getenv("DB_PASS");
+    const char* dbname = getenv("DB_NAME");
+    const char* port = getenv("DB_PORT");
+
+    if (mysql_real_connect(conn, host, user, pass, dbname, 3306, NULL, 0) == NULL) {
+        fprintf(stderr, "mysql_real_connect() failed: %s\n", mysql_error(conn));
         mysql_close(conn);
         return NULL;
     }
@@ -96,6 +102,8 @@ int callback_view(const struct _u_request *request, struct _u_response *response
 
 int main(void) {
     struct _u_instance instance;
+
+    load_dotenv(".env");
 
     // Initialize Ulfius
     if (ulfius_init_instance(&instance, PORT, NULL, NULL) != U_OK) {
