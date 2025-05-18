@@ -16,4 +16,4 @@ gcc server.c -o server -lulfius -ljansson -lmysqlclient
 
 python3 server.py
 
-## Server Flask running on http://127.0.0.1:5000
+## Server Flask running on http://127.0.0.1:8000
