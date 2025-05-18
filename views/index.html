@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Home</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="../statics/css/index.css" />
+    <link rel="icon" href="../statics/assets/gemini_icon.png" type="image/x-icon" />
+  </head>
+  <body>
+    <div class="sidebar" id="sidebar">
+      <div class="top">
+        <img
+          id="menu-icon"
+          class="menu"
+          src="../statics/assets/menu_icon.png"
+          alt="Menu"
+          title="Toggle Sidebar"
+        />
+        <div class="recent">
+          <p class="recent-title">Recent</p>
+          <div class="recent-entry">
+            <img src="../statics/assets/message_icon.png" alt="Message" />
+            <span>TrongND</span>
+          </div>
+        </div>
+      </div>
+      <div class="bottom">
+        <div class="bottom-item recent-entry">
+          <img src="../statics/assets/question_icon.png" alt="Help" />
+          <span>Help</span>
+        </div>
+        <div class="bottom-item recent-entry">
+          <img src="../statics/assets/history_icon.png" alt="Activity" />
+          <span>Activity</span>
+        </div>
+        <div class="bottom-item recent-entry">
+          <img src="../statics/assets/setting_icon.png" alt="Settings" />
+          <span>Settings</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="main-content">
+      <div class="auth-buttons">
+        <button class="btn-auth btn-login">Đăng nhập</button>
+        <button class="btn-auth btn-signup">Đăng ký</button>
+      </div>
+
+      <div class="card p-4">
+        <h2 class="text-center mb-4">📝 Vietnamese Spelling Corrector</h2>
+
+        <div class="mb-3">
+          <label for="inputText" class="form-label">Nhập văn bản:</label>
+          <textarea
+            class="form-control input-area"
+            id="inputText"
+            placeholder="Gõ văn bản tiếng Việt..."
+            rows="5"
+          ></textarea>
+        </div>
+
+        <div class="text-center mb-3">
+          <button class="btn btn-primary" onclick="standardizeText()">
+            Chuẩn hóa
+          </button>
+          <div
+            id="loading"
+            class="spinner-border text-primary ms-2"
+            role="status"
+          ></div>
+        </div>
+
+        <div class="mb-3">
+          <label for="outputText" class="form-label">Kết quả:</label>
+          <div
+            class="input-area bg-light"
+            id="outputText"
+            readonly
+          >
+            Kết quả chuẩn hóa...
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      const menuIcon = document.getElementById("menu-icon");
+      const sidebar = document.getElementById("sidebar");
+
+      menuIcon.addEventListener("click", () => {
+        sidebar.classList.toggle("collapsed");
+      });
+
+      async function standardizeText() {
+        const inputText = document.getElementById("inputText").value;
+        const outputTextElement = document.getElementById("outputText");
+        const loadingSpinner = document.getElementById("loading");
+
+        outputTextElement.textContent = "";
+        loadingSpinner.style.display = "inline-block";
+
+        try {
+          const response = await fetch("http://localhost:8000/correct", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ text: inputText }),
+          });
+
+          const data = await response.json();
+          outputTextElement.textContent =
+            data.corrected_text || "Không có kết quả.";
+        } catch (error) {
+          outputTextElement.textContent =
+            "❌ Lỗi: Không thể kết nối đến server.";
+        } finally {
+          loadingSpinner.style.display = "none";
+        }
+      }
+    </script>
+  </body>
+</html>

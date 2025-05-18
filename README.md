@@ -2,7 +2,7 @@
 
 ## Run command to compile source
 
-gcc server.c -o server -lulfius -ljansson -lorcania
+gcc server.c -o server -lulfius -ljansson -lmysqlclient
 
 ## Run command to start Server
 
