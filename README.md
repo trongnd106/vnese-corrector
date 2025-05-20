@@ -1,31 +1,31 @@
-# 0. Recommended operating system: Ubuntu
-# 1. Run Server Ulfius
+### 🚀 Recommended operating system: Ubuntu
+## 📖 Run Server Ulfius
 
-## Run command to compile source
+### Run command to compile source
 
 ```
 gcc server.c -o server -lulfius -ljansson -lmysqlclient -lcrypt
 ```
 
-## Run command to start Server
+### Run command to start Server
 
 ```
 ./server
 ```
 
-## Server Ulfius running on http://127.0.0.1:8080
+### Server Ulfius running on http://127.0.0.1:8080
 
-# 2. Run Server Flask
+## 📖 Run Server Flask
 
-## Run command to start Server
+### Run command to start Server
 
 ```
 python3 server.py
 ```
 
-## Server Flask running on http://127.0.0.1:8000
+### Server Flask running on http://127.0.0.1:8000
 
-# 3. Run command to create local Database connection
+## 📖 Run command to create local Database connection
 
 ```
 docker run --name mysql-corrector \
