@@ -1,3 +1,4 @@
+# 0. Recommended operating system: Ubuntu
 # 1. Run Server Ulfius
 
 ## Run command to compile source
