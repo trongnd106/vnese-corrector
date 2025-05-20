@@ -3,10 +3,8 @@
 #include <string.h>
 #include <mysql/mysql.h>
 #include "dotenv.h"
-#include "services/view.h"
-#include "services/static.h"
 #include <jansson.h>
-#include "services/user.h"
+#include "routes/api.h"
 
 #define PORT 8080
 
@@ -50,41 +48,9 @@ int main(void) {
         return 1;
     }
 
-    // For handle static files
-    if (ulfius_add_endpoint_by_val(&instance, "GET", "/statics/*", NULL, 0, &callback_static, NULL) != U_OK) {
-        fprintf(stderr, "Error adding static files endpoint\n");
-        ulfius_clean_instance(&instance);
-        return 1;
-    }
-    
-    // Define endpoints
-    if (ulfius_add_endpoint_by_val(&instance, "GET", "/", NULL, 0, &callback_view_guest, NULL) != U_OK) {
-        fprintf(stderr, "Error adding GET /view endpoint\n");
-        ulfius_clean_instance(&instance);
-        return 1;
-    }
-    if (ulfius_add_endpoint_by_val(&instance, "GET", "/index", NULL, 0, &callback_view, NULL) != U_OK) {
-        fprintf(stderr, "Error adding GET /view endpoint\n");
-        ulfius_clean_instance(&instance);
-        return 1;
-    }
-    if (ulfius_add_endpoint_by_val(&instance, "GET", "/signup", NULL, 0, &callback_view_signup, NULL) != U_OK) {
-        fprintf(stderr, "Error adding GET /signup endpoint\n");
-        ulfius_clean_instance(&instance);
-        return 1;
-    }
-    if (ulfius_add_endpoint_by_val(&instance, "GET", "/login", NULL, 0, &callback_view_login, NULL) != U_OK) {
-        fprintf(stderr, "Error adding GET /login endpoint\n");
-        ulfius_clean_instance(&instance);
-        return 1;
-    }
-    if (ulfius_add_endpoint_by_val(&instance, "POST", "/users", NULL, 0, &callback_create_user, conn) != U_OK) {
-        fprintf(stderr, "Error adding POST /users endpoint\n");
-        ulfius_clean_instance(&instance);
-        return 1;
-    }
-    if (ulfius_add_endpoint_by_val(&instance, "POST", "/login", NULL, 0, &callback_login_user, conn) != U_OK) {
-        fprintf(stderr, "Error adding POST /login endpoint\n");
+    // Initialize endpoints
+    if (!init_api_endpoints(&instance, conn)) {
+        fprintf(stderr, "Failed to initialize api endpoints. Exiting...\n");
         ulfius_clean_instance(&instance);
         return 1;
     }
