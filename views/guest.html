@@ -12,40 +12,12 @@
     <link rel="icon" href="../statics/assets/gemini_icon.png" type="image/x-icon" />
   </head>
   <body>
-    <div class="sidebar" id="sidebar">
-      <div class="top">
-        <img
-          id="menu-icon"
-          class="menu"
-          src="../statics/assets/menu_icon.png"
-          alt="Menu"
-          title="Toggle Sidebar"
-        />
-        <div class="recent">
-          <p class="recent-title">Recent</p>
-          <div class="recent-entry">
-            <img src="../statics/assets/message_icon.png" alt="Message" />
-            <span>TrongND</span>
-          </div>
-        </div>
-      </div>
-      <div class="bottom">
-        <div class="bottom-item recent-entry">
-          <img src="../statics/assets/question_icon.png" alt="Help" />
-          <span>Help</span>
-        </div>
-        <div class="bottom-item recent-entry">
-          <img src="../statics/assets/history_icon.png" alt="Activity" />
-          <span>Activity</span>
-        </div>
-        <div class="bottom-item recent-entry">
-          <img src="../statics/assets/setting_icon.png" alt="Settings" />
-          <span>Settings</span>
-        </div>
-      </div>
-    </div>
-
     <div class="main-content">
+      <div class="auth-buttons">
+        <button class="btn-auth btn-login" onclick="window.location.href='/login'">Đăng nhập</button>
+        <button class="btn-auth btn-signup" onclick="window.location.href='/signup'">Đăng ký</button>
+      </div>
+
       <div class="card p-4">
         <h2 class="text-center mb-4">📝 Vietnamese Spelling Corrector</h2>
 

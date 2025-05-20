@@ -74,7 +74,10 @@ def correct_text():
         if not isinstance(input_text, str):
             return jsonify({'error': 'Text field must be a string'}), 400
 
-        corrected_text = correct(input_text)
+        sentences = re.split(r'(?<=[.!?]) +', input_text)
+        corrected_sentences = [correct(sentence) for sentence in sentences]
+        corrected_text = ' '.join(corrected_sentences)
+
         return jsonify({'corrected_text': corrected_text}), 200
 
     except Exception as e:

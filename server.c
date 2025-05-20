@@ -58,13 +58,33 @@ int main(void) {
     }
     
     // Define endpoints
+    if (ulfius_add_endpoint_by_val(&instance, "GET", "/", NULL, 0, &callback_view_guest, NULL) != U_OK) {
+        fprintf(stderr, "Error adding GET /view endpoint\n");
+        ulfius_clean_instance(&instance);
+        return 1;
+    }
     if (ulfius_add_endpoint_by_val(&instance, "GET", "/index", NULL, 0, &callback_view, NULL) != U_OK) {
         fprintf(stderr, "Error adding GET /view endpoint\n");
         ulfius_clean_instance(&instance);
         return 1;
     }
+    if (ulfius_add_endpoint_by_val(&instance, "GET", "/signup", NULL, 0, &callback_view_signup, NULL) != U_OK) {
+        fprintf(stderr, "Error adding GET /signup endpoint\n");
+        ulfius_clean_instance(&instance);
+        return 1;
+    }
+    if (ulfius_add_endpoint_by_val(&instance, "GET", "/login", NULL, 0, &callback_view_login, NULL) != U_OK) {
+        fprintf(stderr, "Error adding GET /login endpoint\n");
+        ulfius_clean_instance(&instance);
+        return 1;
+    }
     if (ulfius_add_endpoint_by_val(&instance, "POST", "/users", NULL, 0, &callback_create_user, conn) != U_OK) {
         fprintf(stderr, "Error adding POST /users endpoint\n");
+        ulfius_clean_instance(&instance);
+        return 1;
+    }
+    if (ulfius_add_endpoint_by_val(&instance, "POST", "/login", NULL, 0, &callback_login_user, conn) != U_OK) {
+        fprintf(stderr, "Error adding POST /login endpoint\n");
         ulfius_clean_instance(&instance);
         return 1;
     }

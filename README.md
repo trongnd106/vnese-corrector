@@ -3,7 +3,7 @@
 ## Run command to compile source
 
 ```
-gcc server.c -o server -lulfius -ljansson -lmysqlclient
+gcc server.c -o server -lulfius -ljansson -lmysqlclient -lcrypt
 ```
 
 ## Run command to start Server

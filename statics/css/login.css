@@ -1,0 +1,17 @@
+.login-container {
+    max-width: 500px;
+    margin: 50px auto;
+    padding: 20px;
+  }
+  .login-header {
+    text-align: center;
+    margin-bottom: 30px;
+  }
+  .login-header img {
+    width: 60px;
+    margin-bottom: 15px;
+  }
+  .back-to-home {
+    text-align: center;
+    margin-top: 20px;
+  }
